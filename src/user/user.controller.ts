@@ -11,10 +11,9 @@ import { User } from '@prisma/client';
 @Controller('users')
 export class UserController {
     constructor(private userService: UserService){}
+
     @Get('me')
-    getMe( @GetUser() user: User) {
-        // It works here, don't know why.
-        console.log(user.id)
-        return user
+    getMe( @GetUser("id") userId: number) {
+        return this.userService.getMe(userId)
     }
 }
