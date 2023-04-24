@@ -3,17 +3,18 @@ import { AuthGuard } from '@nestjs/passport';
 import { Request } from 'express';
 import { UserService } from './user.service';
 import { JwtGuard } from 'src/auth/guard';
+import { GetUser } from 'src/auth/decorator';
+import { User } from '@prisma/client';
 // import { JwtStrategy } from 'src/auth/strategy';
 
+@UseGuards(JwtGuard)
 @Controller('users')
 export class UserController {
     constructor(private userService: UserService){}
-    @UseGuards(JwtGuard)
     @Get('me')
-    getMe(@Body() dto: any, @Req() req: Request) {
-        // console.log(dto, req)
-        // tried implementing user service, but i could not access the req.user props.
-        // So i implemented the mod I wanted in the authguard instead and just returned the req.user
-        return req.user
+    getMe( @GetUser() user: User) {
+        // It works here, don't know why.
+        console.log(user.id)
+        return user
     }
 }
