@@ -27,9 +27,9 @@
     "dev:db:format": "npx prisma format",
     "dev:db:deploy": "npx prisma migrate deploy",
 
-    "test:db:deploy": "dotenv -e .env.test -- npx prisma migrate deploy",
-    "test:db:push": "dotenv -e .env.test -- npx prisma db push --preview-feature",
-    "test:db:reset": "dotenv -e .env.test -- echo 'TRUNCATE TABLE User; TRUNCATE TABLE Bookmark;' | prisma db execute --stdin "
+    "test:db:deploy": "dotenv -e .env.test -- prisma migrate deploy",
+    "test:db:push": "dotenv -e .env.test -- prisma db push --preview-feature",
+    "test:db:reset": "dotenv -e .env.test | prisma migrate reset --force"
   },
   "dependencies": {
     "@nestjs/common": "^9.0.0",
