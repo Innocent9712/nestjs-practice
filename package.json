@@ -17,11 +17,19 @@
     "test:watch": "jest --watch",
     "test:cov": "jest --coverage",
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
-    "test:e2e": "jest --config ./test/jest-e2e.json",
+    "pretest:e2e": "npm run test:db:deploy && npm run test:db:reset",
+    "test:e2e": "dotenv -e .env.text -- jest --config ./test/jest-e2e.json",
+    "pretest:e2e:watch": "npm run test:db:deploy && npm run test:db:reset",
+    "test:e2e:watch": "dotenv -e .env.test -- jest --watch --no-cache --config ./test/jest-e2e.json",
+
     "dev:db:all": "npx prisma migrate dev",
     "dev:db:browse": "npx prisma studio",
     "dev:db:format": "npx prisma format",
-    "dev:db:deply": "npx prisma migrate deploy"
+    "dev:db:deploy": "npx prisma migrate deploy",
+
+    "test:db:deploy": "dotenv -e .env.test -- npx prisma migrate deploy",
+    "test:db:push": "dotenv -e .env.test -- npx prisma db push --preview-feature",
+    "test:db:reset": "dotenv -e .env.test -- echo 'TRUNCATE TABLE User; TRUNCATE TABLE Bookmark;' | prisma db execute --stdin "
   },
   "dependencies": {
     "@nestjs/common": "^9.0.0",
@@ -50,10 +58,12 @@
     "@types/supertest": "^2.0.11",
     "@typescript-eslint/eslint-plugin": "^5.0.0",
     "@typescript-eslint/parser": "^5.0.0",
+    "dotenv-cli": "^7.2.1",
     "eslint": "^8.0.1",
     "eslint-config-prettier": "^8.3.0",
     "eslint-plugin-prettier": "^4.0.0",
     "jest": "29.5.0",
+    "pactum": "^3.4.0",
     "prettier": "^2.3.2",
     "prisma": "^4.13.0",
     "source-map-support": "^0.5.20",
