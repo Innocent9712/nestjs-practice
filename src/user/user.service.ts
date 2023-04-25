@@ -1,5 +1,6 @@
 import { Injectable, InternalServerErrorException } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
+import { EditUserDto } from 'src/dto';
 
 @Injectable()
 export class UserService {
@@ -33,5 +34,21 @@ export class UserService {
         } catch (error) {
             throw new InternalServerErrorException()
         }
+    }
+
+    async editUser(userId: number, dto: EditUserDto) {
+        return this.prisma.user.update({
+            where: {
+                id: userId,
+            },
+            data: dto,
+            select: {
+                id: true,
+                email: true,
+                firstName: true,
+                lastName: true
+            }
+        })// return the updated user
+            
     }
 }

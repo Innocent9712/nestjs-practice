@@ -1,4 +1,4 @@
-import { IsEmail, IsNotEmpty, IsString } from 'class-validator';
+import { IsEmail, IsNotEmpty, IsOptional, IsString } from 'class-validator';
 
 export class AuthSignInDto {
     @IsEmail()
@@ -11,8 +11,9 @@ export class AuthSignInDto {
 
 export class AuthDto extends AuthSignInDto {
   @IsString()
+  @IsOptional()
   firstName?: string;
   @IsString()
+  @IsOptional()
   lastName?: string;
 }
-

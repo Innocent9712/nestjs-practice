@@ -3,7 +3,7 @@ import { INestApplication, ValidationPipe } from '@nestjs/common';
 import { AppModule } from './../src/app.module';
 import { PrismaService } from '../src/prisma/prisma.service';
 import * as pactum from 'pactum';
-import { AuthDto, AuthSignInDto } from 'src/dto';
+import { AuthDto, AuthSignInDto, EditUserDto } from '../src/dto';
 
 
 describe('App e2e', () => {
@@ -50,7 +50,7 @@ describe('App e2e', () => {
         // .inspect()
       })
       it('should fail signup if email is invalid', () => {
-        const AuthDto: AuthSignInDto = {
+        const AuthDto: AuthDto = {
           email: 'test123',
           password: 'test123',
         }
@@ -130,12 +130,21 @@ describe('App e2e', () => {
         return pactum.spec().get('/users/me')
         .withBearerToken('$S{access_token}')
         .expectStatus(200)
-        .inspect()
+        .stores("userId", "id")
       })
     })
 
     describe('Edit user', () => { 
-    
+      it('should edit user', () => {
+        const UpdateUser: EditUserDto = {
+          email: "updated@test.com"
+        }
+
+        return pactum.spec().patch('/users/$S{userId}')
+        .withBearerToken('$S{access_token}')
+        .withBody(UpdateUser)
+        .expectStatus(200)
+      })
     })
   })
 
