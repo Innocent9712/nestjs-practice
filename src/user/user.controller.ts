@@ -20,7 +20,7 @@ export class UserController {
 
     @Patch(':id')
     editUser(@Param('id') id: string, @Body() dto: EditUserDto) {
-        console.log(id, dto)
+        // console.log(id, dto)
         // return "Hello"
         return this.userService.editUser(parseInt(id, 10), dto)
     }

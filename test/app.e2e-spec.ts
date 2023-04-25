@@ -150,6 +150,15 @@ describe('App e2e', () => {
   })
 
   describe('Bookmark', () => {
+    describe('Get empty bookmarks', () => { 
+      it('should get an empty array', () => {
+        return pactum.spec().get('/bookmarks')
+        .withBearerToken('$S{access_token}')
+        .expectStatus(200)
+        .expectBody([])
+      })
+    })
+
     describe('Create bookmark', () => { 
       it('should create bookmark', () => {
         const bookmark: CreateBookmarkDto = {
@@ -160,6 +169,7 @@ describe('App e2e', () => {
         .withBearerToken('$S{access_token}')
         .withBody(bookmark)
         .expectStatus(201)
+        .expectBodyContains('test')
       })
     })
 
@@ -168,6 +178,7 @@ describe('App e2e', () => {
         return pactum.spec().get('/bookmarks')
         .withBearerToken('$S{access_token}')
         .expectStatus(200)
+        .expectJsonLength(1)
         .stores('firstBookmarkId', '[0].id')
       })
     })
@@ -180,7 +191,8 @@ describe('App e2e', () => {
         .expectBody({})
       })
       it('should get bookmark by id', () => {
-        return pactum.spec().get('/bookmarks/$S{firstBookmarkId}')
+        return pactum.spec().get('/bookmarks/{id}')
+        .withPathParams('id', '$S{firstBookmarkId}') // cleaner to use in case of params
         .withBearerToken('$S{access_token}')
         .expectStatus(200)
         .expectBodyContains('title')
@@ -198,13 +210,20 @@ describe('App e2e', () => {
         .expectStatus(200)
         .expectBodyContains(updateBookmark.title)
       })
+
+      it('should fail to bookmark by id', () => {
+        return pactum.spec().patch('/bookmarks/9999')
+        .withBearerToken('$S{access_token}')
+        .withBody(updateBookmark)
+        .expectStatus(500)
+      })
     })
 
     describe('Delete bookmark by id', () => { 
       it('should delete bookmark by id', () => {
         return pactum.spec().delete('/bookmarks/$S{firstBookmarkId}')
         .withBearerToken('$S{access_token}')
-        .expectStatus(200)
+        .expectStatus(204)
     })
     it('should fail to bookmark with same id', () => {
       return pactum.spec().delete('/bookmarks/$S{firstBookmarkId}')
