@@ -4,6 +4,7 @@ import { AppModule } from './../src/app.module';
 import { PrismaService } from '../src/prisma/prisma.service';
 import * as pactum from 'pactum';
 import { AuthDto, AuthSignInDto, EditUserDto } from '../src/dto';
+import { CreateBookmarkDto, EditBookmarkDto } from '../src/dto/bookmark.dto';
 
 
 describe('App e2e', () => {
@@ -148,25 +149,68 @@ describe('App e2e', () => {
     })
   })
 
-  describe('Bookmark', () => { 
+  describe('Bookmark', () => {
     describe('Create bookmark', () => { 
-    
+      it('should create bookmark', () => {
+        const bookmark: CreateBookmarkDto = {
+          title: "test",
+          url: "https://test.com"
+        }
+        return pactum.spec().post('/bookmarks')
+        .withBearerToken('$S{access_token}')
+        .withBody(bookmark)
+        .expectStatus(201)
+      })
     })
 
     describe('Get bookmarks', () => { 
-    
+      it('should get bookmarks', () => {
+        return pactum.spec().get('/bookmarks')
+        .withBearerToken('$S{access_token}')
+        .expectStatus(200)
+        .stores('firstBookmarkId', '[0].id')
+      })
     })
 
     describe('Get bookmark by id', () => { 
-    
+      it('should respond with an empty body', () => {
+        return pactum.spec().get('/bookmarks/9999')
+        .withBearerToken('$S{access_token}')
+        .expectStatus(200)
+        .expectBody({})
+      })
+      it('should get bookmark by id', () => {
+        return pactum.spec().get('/bookmarks/$S{firstBookmarkId}')
+        .withBearerToken('$S{access_token}')
+        .expectStatus(200)
+        .expectBodyContains('title')
+      })
     })
 
     describe('Edit bookmark by id', () => { 
-    
+      const updateBookmark: EditBookmarkDto = {
+        title: "updated title"
+      }
+      it('should edit bookmark by id', () => {
+        return pactum.spec().patch('/bookmarks/$S{firstBookmarkId}')
+        .withBearerToken('$S{access_token}')
+        .withBody(updateBookmark)
+        .expectStatus(200)
+        .expectBodyContains(updateBookmark.title)
+      })
     })
 
     describe('Delete bookmark by id', () => { 
-    
+      it('should delete bookmark by id', () => {
+        return pactum.spec().delete('/bookmarks/$S{firstBookmarkId}')
+        .withBearerToken('$S{access_token}')
+        .expectStatus(200)
     })
+    it('should fail to bookmark with same id', () => {
+      return pactum.spec().delete('/bookmarks/$S{firstBookmarkId}')
+      .withBearerToken('$S{access_token}')
+      .expectStatus(500)
+    })
+  })
   })
 })
