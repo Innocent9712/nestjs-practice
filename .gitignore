@@ -36,3 +36,4 @@ lerna-debug.log*
 
 # ignored files
 .env
+.env.test

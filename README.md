@@ -32,6 +32,18 @@
 $ npm install
 ```
 
+## Database
+
+copy `.env.example` to `.env` and fill in the values. Same with `.env.test.eample`.
+
+```bash
+# create database along with tables and relationships from migration files
+$ npm run dev:db:deploy
+
+# access db via a UI provided by prisma
+$ npm run dev:db:browse
+```
+
 ## Running the app
 
 ```bash
@@ -54,20 +66,10 @@ $ npm run test
 # e2e tests
 $ npm run test:e2e
 
+# e2e watch mode
+$ npm run test:e2e:watch
+
 # test coverage
 $ npm run test:cov
 ```
 
-## Support
-
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
-
-## Stay in touch
-
-- Author - [Kamil Myśliwiec](https://kamilmysliwiec.com)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
-
-## License
-
-Nest is [MIT licensed](LICENSE).
