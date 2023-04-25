@@ -12,6 +12,12 @@ constructor(config: ConfigService) {
             },
         }
     });
-
 }
+    // delete all bookmarks and users
+    cleadDb() {
+        return this.$transaction([
+            this.bookmark.deleteMany(),
+            this.user.deleteMany()
+        ])
+    }
 }

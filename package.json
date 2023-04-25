@@ -17,9 +17,9 @@
     "test:watch": "jest --watch",
     "test:cov": "jest --coverage",
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
-    "pretest:e2e": "npm run test:db:deploy && npm run test:db:reset",
+    "pretest:e2e": "npm run test:db:reset",
     "test:e2e": "dotenv -e .env.text -- jest --config ./test/jest-e2e.json",
-    "pretest:e2e:watch": "npm run test:db:deploy && npm run test:db:reset",
+    "pretest:e2e:watch": "npm run test:db:reset",
     "test:e2e:watch": "dotenv -e .env.test -- jest --watch --no-cache --config ./test/jest-e2e.json",
 
     "dev:db:all": "npx prisma migrate dev",
